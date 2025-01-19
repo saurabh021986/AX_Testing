@@ -9,12 +9,59 @@
             font-family: Arial, sans-serif;
             background-color: #ffffff;
             color: #cccccc; /* Low contrast issue */
+            margin: 0;
+            padding: 0;
         }
-        .hidden {
-            display: none; /* Content hidden from all users */
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
         }
-        .focusable {
-            outline: none; /* No visible focus indicator */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        nav ul li {
+            display: inline;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+        }
+        main {
+            padding: 20px;
+        }
+        form {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        form input, form button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            display: block;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        section img {
+            max-width: 100%;
+            height: auto;
+        }
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -25,6 +72,7 @@
             <ul>
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Book Tickets</a></li>
+                <li><a href="#">Schedules</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
         </nav>
@@ -36,6 +84,7 @@
             <!-- Missing labels -->
             <input type="text" placeholder="Enter departure city">
             <input type="text" placeholder="Enter destination city">
+            <input type="date">
 
             <!-- Non-descriptive button text -->
             <button>Go</button>
@@ -44,15 +93,42 @@
         <section>
             <h3>Special Offers</h3>
             <!-- Missing alt attributes for images -->
-            <img src="offer.jpg">
-            <p>Click <a href="#">here</a> to learn more.</p>
+            <img src="special-offer.jpg" style="width: 300px; height: 200px;">
+            <p>Book now and save 20%! Click <a href="#">here</a> to learn more.</p>
         </section>
 
         <section>
             <!-- Improper heading structure -->
             <h3>Travel Tips</h3>
             <h5>How to save money</h5>
+            <p>Travel during off-peak hours to get the best fares.</p>
             <h4>Comfortable travel ideas</h4>
+            <p>Reserve seats in advance and carry essentials for long journeys.</p>
+        </section>
+
+        <section>
+            <h3>Available Routes</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #f4f4f4;">
+                        <th style="border: 1px solid #ccc; padding: 10px;">Route</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Duration</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 10px;">Berlin to Munich</td>
+                        <td style="border: 1px solid #ccc; padding: 10px;">6h 30m</td>
+                        <td style="border: 1px solid #ccc; padding: 10px;">€45</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 10px;">Frankfurt to Hamburg</td>
+                        <td style="border: 1px solid #ccc; padding: 10px;">4h 15m</td>
+                        <td style="border: 1px solid #ccc; padding: 10px;">€30</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
 
         <section>
@@ -65,6 +141,9 @@
             <h3>Customer Reviews</h3>
             <blockquote class="focusable">
                 "Great service! Will travel again!"
+            </blockquote>
+            <blockquote class="focusable">
+                "Comfortable seats and timely trains. Highly recommend."
             </blockquote>
         </section>
     </main>
