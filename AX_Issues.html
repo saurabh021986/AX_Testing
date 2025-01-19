@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Booking - Accessibility Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #cccccc; /* Low contrast issue */
+        }
+        .hidden {
+            display: none; /* Content hidden from all users */
+        }
+        .focusable {
+            outline: none; /* No visible focus indicator */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Train Booking</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Book Tickets</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Plan Your Journey</h2>
+        <form>
+            <!-- Missing labels -->
+            <input type="text" placeholder="Enter departure city">
+            <input type="text" placeholder="Enter destination city">
+
+            <!-- Non-descriptive button text -->
+            <button>Go</button>
+        </form>
+
+        <section>
+            <h3>Special Offers</h3>
+            <!-- Missing alt attributes for images -->
+            <img src="offer.jpg">
+            <p>Click <a href="#">here</a> to learn more.</p>
+        </section>
+
+        <section>
+            <!-- Improper heading structure -->
+            <h3>Travel Tips</h3>
+            <h5>How to save money</h5>
+            <h4>Comfortable travel ideas</h4>
+        </section>
+
+        <section>
+            <h3>Live Updates</h3>
+            <!-- No aria-live for dynamic content -->
+            <div id="updates">Train updates will appear here.</div>
+        </section>
+
+        <section>
+            <h3>Customer Reviews</h3>
+            <blockquote class="focusable">
+                "Great service! Will travel again!"
+            </blockquote>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Train Booking Inc. All rights reserved.</p>
+        <!-- Empty links -->
+        <a href="#"></a>
+    </footer>
+</body>
+</html>
