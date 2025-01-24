@@ -1,71 +1,79 @@
-import os
-import json
-import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
+import com.deque.html.axecore.results.Results;
+import com.deque.html.axecore.selenium.AxeBuilder;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-# Path to the axe-core JavaScript file (download it from https://github.com/dequelabs/axe-core)
-AXE_SCRIPT_PATH = "path/to/axe.min.js"
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-# Set up Selenium WebDriver
-driver = webdriver.Chrome()  # Use ChromeDriver; replace with appropriate driver for other browsers
-driver.maximize_window()
+public class AccessibilityTest {
 
-# Base URL of the web application
-BASE_URL = "https://example.com"
+    // Set the base URL of the web application
+    private static final String BASE_URL = "https://example.com";
+    private static final Set<String> visitedPages = new HashSet<>();
 
-# List to store visited pages
-visited_pages = set()
+    public static void main(String[] args) {
+        // Set up WebDriver (Chrome in this case)
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
 
-# Accessibility scan function
-def run_axe_analysis(url):
-    """Inject axe-core and run accessibility analysis on the given URL."""
-    print(f"Scanning {url}...")
-    # Navigate to the page
-    driver.get(url)
-    time.sleep(2)  # Allow time for the page to load completely
+        try {
+            // Start crawling and testing for accessibility
+            crawlAndTest(driver, BASE_URL);
+        } finally {
+            // Close the browser
+            driver.quit();
+            System.out.println("Accessibility testing completed!");
+        }
+    }
 
-    # Inject axe-core into the page
-    with open(AXE_SCRIPT_PATH, "r") as axe_script:
-        driver.execute_script(axe_script.read())
+    private static void crawlAndTest(WebDriver driver, String url) {
+        // Avoid re-visiting the same URL
+        if (visitedPages.contains(url)) return;
+        visitedPages.add(url);
 
-    # Run the accessibility analysis
-    results = driver.execute_script("return axe.run();")
-    
-    # Save the results to a JSON file
-    output_file = f"axe_report_{url.replace('https://', '').replace('/', '_')}.json"
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=4)
-    
-    print(f"Accessibility report saved to: {output_file}")
+        try {
+            // Navigate to the page
+            driver.get(url);
+            Thread.sleep(2000); // Wait for the page to load completely
 
-# Crawl all internal links
-def crawl_links(url):
-    """Recursively crawl all internal links and run accessibility scans."""
-    if url in visited_pages or not url.startswith(BASE_URL):
-        return
-    visited_pages.add(url)
+            // Run accessibility tests using axe-core
+            runAxeAnalysis(driver, url);
 
-    try:
-        driver.get(url)
-        time.sleep(2)  # Allow time for the page to load
+            // Find all internal links on the page
+            List<WebElement> links = driver.findElements(By.tagName("a"));
+            for (WebElement link : links) {
+                String href = link.getAttribute("href");
+                if (href != null && href.startsWith(BASE_URL)) {
+                    crawlAndTest(driver, href); // Recursively visit each link
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error while processing URL " + url + ": " + e.getMessage());
+        }
+    }
 
-        # Run accessibility analysis on the current page
-        run_axe_analysis(url)
+    private static void runAxeAnalysis(WebDriver driver, String url) {
+        System.out.println("Scanning: " + url);
+        try {
+            // Create an AxeBuilder object to run axe-core tests
+            AxeBuilder axeBuilder = new AxeBuilder();
+            Results results = axeBuilder.analyze(driver);
 
-        # Find all internal links on the page
-        links = driver.find_elements(By.TAG_NAME, "a")
-        for link in links:
-            href = link.get_attribute("href")
-            if href and href.startswith(BASE_URL):
-                crawl_links(href)
-    except Exception as e:
-        print(f"Error while processing {url}: {e}")
-
-# Start crawling and analyzing
-try:
-    crawl_links(BASE_URL)
-finally:
-    driver.quit()
-    print("Accessibility testing completed!")
+            // Save the results to a JSON file
+            String fileName = "axe_report_" + url.replace("https://", "").replace("/", "_") + ".json";
+            try (FileWriter fileWriter = new FileWriter(fileName)) {
+                fileWriter.write(results.toJson());
+                System.out.println("Accessibility report saved to: " + fileName);
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving report for " + url + ": " + e.getMessage());
+        }
+    }
+}
